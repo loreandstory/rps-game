@@ -1,8 +1,9 @@
 # rps-game
 
 ## About
+`rps-game` is a simple terminal Rock Paper Scissors game, where the player competes against the computer. You may choose to play as many rounds as you like.
 
-`rps-game` is a simple terminal Rock Paper Scissors game, where the player competes against the computer. It is still in beta, but there is a basic interface, enough for being able to fully play Rock Paper Scissors against various computer "personalities".
+`rps-game` is still in beta, but there is a basic interface, enough to fully play Rock Paper Scissors against various computer "personalities".
 
 ## Installation
 
