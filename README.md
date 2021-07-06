@@ -1,7 +1,5 @@
 # rps-game
 
-![Tic Tac Toe game during play](assets/tic-tac-toe.png)
-
 ## About
 
 `rps-game` is a simple terminal Rock Paper Scissors game, where the player competes against the computer. It is still in beta, but there is a basic interface, enough for being able to fully play Rock Paper Scissors against various computer "personalities".
