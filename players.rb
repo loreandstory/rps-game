@@ -17,59 +17,35 @@ class Players
                                }
                     }.freeze
 
+  BOTS = [
+           Bot.new, Walle.new, R2D2.new, C3PO.new,
+           BB8.new, Hal.new,   Sonny.new
+         ].freeze
+
   def to_s
     name
   end
-
-   private
-  attr_writer :move
 end
 
 class Human < Players
-  def initialize
-    self.name=(nil)
+  def initialize(n)
+    self.name = n
   end
 
-  def choose_move(game_type)
-    moves = POSSIBLE_MOVES[game_type]
-    moves.keys.each { |move| puts move }
-
-    prompt("Choose your move")
-    move_name = gets.chomp
-
-    return self.move = moves[move_name] if moves.keys.include? move_name
-
-    puts "Please enter a valid move..."
-    choose_move(game_type)
+  def choose_move(game_type, chosen_move)
+    @move = POSSIBLE_MOVES[game_type][chosen_move]
   end
 
   private
 
-  def prompt(message)
-    print "\n=> " + message + ": "
-  end
-
-  def name=(n)
-    prompt("Enter what you would like to be called Player")
-    @name = gets.chomp
-
-    return unless @name.empty?
-
-    puts "Please enter something..."
-    self.name=(n)
-  end
+  attr_writer :name
 end
 
 class Computer < Players
-  def initialize() @name = 'Computer'; end
 
   def choose_move(game_type)
     moves = POSSIBLE_MOVES[game_type]
     self.move = personality(game_type, moves)
-  end
-
-  def personality(game_type, moves)
-    moves.values.sample
   end
 
   def preference(moves, preferred_choice, tries)
@@ -82,6 +58,14 @@ class Computer < Players
     end
 
     moves[move_name]
+  end
+end
+
+class Bot < Computer
+  def initialize() @name = 'Bot'; end
+
+  def personality(game_type, moves)
+    moves.values.sample
   end
 end
 
