@@ -17,13 +17,16 @@ class Players
                                }
                     }.freeze
 
-  BOTS = [
-           Bot.new, Walle.new, R2D2.new, C3PO.new,
-           BB8.new, Hal.new,   Sonny.new
-         ].freeze
+  def moves
+    POSSIBLE_MOVES[$game_type]
+  end
 
   def to_s
     name
+  end
+
+  def move=(chosen_move)
+    @move = moves[chosen_move]
   end
 end
 
@@ -32,23 +35,13 @@ class Human < Players
     self.name = n
   end
 
-  def choose_move(game_type, chosen_move)
-    @move = POSSIBLE_MOVES[game_type][chosen_move]
-  end
-
   private
 
   attr_writer :name
 end
 
 class Computer < Players
-
-  def choose_move(game_type)
-    moves = POSSIBLE_MOVES[game_type]
-    self.move = personality(game_type, moves)
-  end
-
-  def preference(moves, preferred_choice, tries)
+  def preference(preferred_choice, tries)
     move_name = nil
     i = 0
 
@@ -57,26 +50,26 @@ class Computer < Players
       i += 1
     end
 
-    moves[move_name]
+    move_name
   end
 end
 
 class Bot < Computer
   def initialize() @name = 'Bot'; end
 
-  def personality(game_type, moves)
-    moves.values.sample
+  def personality
+    moves.keys.sample
   end
 end
 
 class R2D2 < Computer
   def initialize() @name = 'R2D2'; end
 
-  def personality(game_type, moves)
-    if game_type == 'rps'
-      preference(moves, 'rock', 3)
+  def personality
+    if $game_type == 'rps'
+      preference('rock', 3)
     else
-      preference(moves, ['rock', 'lizard', 'lizard'].sample, 2)
+      preference(['rock', 'lizard', 'lizard'].sample, 2)
     end
   end
 end
@@ -84,11 +77,11 @@ end
 class C3PO < Computer
   def initialize() @name = 'C3PO'; end
 
-  def personality(game_type, moves)
-    if game_type == 'rps'
-      preference(moves, 'paper', 2)
+  def personality
+    if $game_type == 'rps'
+      preference('paper', 2)
     else
-      preference(moves, 'spock', 3)
+      preference('spock', 3)
     end
   end
 end
@@ -96,11 +89,11 @@ end
 class BB8 < Computer
   def initialize() @name = 'BB8'; end
 
-  def personality(game_type, moves)
-    if game_type == 'rps'
-      preference(moves, ['rock', 'paper'].sample, 2)
+  def personality
+    if $game_type == 'rps'
+      preference(['rock', 'paper'].sample, 2)
     else
-      preference(moves, ['rock', 'paper', 'lizard'].sample, 2)
+      preference(['rock', 'paper', 'lizard'].sample, 2)
     end
   end
 end
@@ -108,12 +101,11 @@ end
 class Walle < Computer
   def initialize() @name = 'Walle'; end
 
-  def personality(game_type, moves)
-    if game_type == 'rps'
-      moves[ 'scissors']
+  def personality
+    if $game_type == 'rps'
+      'scissors'
     else
-      move_name = ['scissors', 'spock'].sample
-      moves[move_name]
+      ['scissors', 'spock'].sample
     end
   end
 end
@@ -121,12 +113,11 @@ end
 class Sonny < Computer
   def initialize() @name = 'Sonny'; end
 
-  def personality(game_type, moves)
-    if game_type == 'rps'
-      moves['paper']
+  def personality
+    if $game_type == 'rps'
+      'paper'
     else
-      move_name = ['paper', 'spock', 'spock'].sample
-      moves[move_name]
+      ['paper', 'spock', 'spock'].sample
     end
   end
 end
@@ -134,11 +125,11 @@ end
 class Hal < Computer
   def initialize() @name = 'Hal'; end
 
-  def personality(game_type, moves)
-    if game_type == 'rps'
-      preference(moves, 'rock', 3)
+  def personality
+    if $game_type == 'rps'
+      preference('rock', 3)
     else
-      moves['spock']
+      'spock'
     end
   end
 end

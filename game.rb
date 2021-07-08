@@ -6,7 +6,7 @@ class Game
     @history = { winners: [], player: [], computer: [] }
   end
 
-  def update_history(player, computer)
+  def update(player, computer)
     winner = if player.move > computer.move
                score[:wins] += 1
                player.name
@@ -23,11 +23,11 @@ class Game
     history[:computer] << [computer.name, computer.move.to_s]
   end
 
-  def update_stats(game_type_moves)
+  def update_stats
     winners, player_hist, computer_hist = history.values
     player_name = player_hist.first.first
 
-    base_stats = game_type_moves.each_with_object({}) do |(move, _), obj|
+    base_stats = moves.each_with_object({}) do |(move, _), obj|
                    obj[move] = 0
                  end
 
@@ -45,6 +45,10 @@ class Game
   end
 
   private
+
+  def moves
+    Players::POSSIBLE_MOVES[$game_type]
+  end
 
   def calc_game_percentages(winners, player_name)
     player_wins = winners.select { |winner| winner == player_name }

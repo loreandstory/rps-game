@@ -10,11 +10,11 @@ class Moves
           }.freeze
 
   def >(other)
-    RULES[self.move].include? other.move
+    RULES[move].include? other.move
   end
 
   def <(other)
-    RULES[other.move].include? self.move
+    RULES[other.move].include? move
   end
 
   def to_s
