@@ -10,8 +10,8 @@
 To install `rps-game`, simply clone this repository to your machine and navigate to the `rps-game` folder created:
 
 ```
-$ git clone https://github.com/loreandstory/tic-tac-toe.git
-$ cd tic-tac-toe/
+$ git clone https://github.com/loreandstory/rps-game.git
+$ cd rps-game/
 ```
 
 ## Running
@@ -19,7 +19,7 @@ $ cd tic-tac-toe/
 You must be `cd`'d into the `rps-game` folder and execute `ruby main.rb` to play:
 
 ```
-$ cd /path/to/tic-tac-toe/
+$ cd /path/to/rps-game/
 $ ruby main.rb
 ```
 
