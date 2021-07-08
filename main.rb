@@ -16,19 +16,18 @@ game = Game.new
 
 player = Human.new(Page::PlayerName.new.interface_with_user)
 
-$game_type = Page::GameType.new.interface_with_user
+$game_type = Page::GameType.new("#{player.name}").interface_with_user
 
 def play(player, game)
   computer = BOTS.sample
 
-  player.move = Page::ChooseMove.new.interface_with_user
+  player.move = Page::ChooseMove.new("#{computer.name}").interface_with_user
   computer.move = computer.personality
 
   game.update(player, computer)
-  p game.history
+  Page::Results.new(game.history)
 
   game.update_stats
-  p game.stats
 end
 
 play(player, game)
