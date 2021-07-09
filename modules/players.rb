@@ -2,20 +2,20 @@ class Players
   attr_reader :name, :move
 
   POSSIBLE_MOVES = {
-                     'rps' => {
-                                'rock'     => Rock.new,
-                                'paper'    => Paper.new,
-                                'scissors' => Scissors.new
-                              },
+    'rps' => {
+      'rock' => Rock.new,
+      'paper' => Paper.new,
+      'scissors' => Scissors.new
+    },
 
-                     'ls'  =>  {
-                                 'rock'     => Rock.new,
-                                 'paper'    => Paper.new,
-                                 'scissors' => Scissors.new,
-                                 'lizard'   => Lizard.new,
-                                 'spock'    => Spock.new
-                               }
-                    }.freeze
+    'ls' => {
+      'rock' => Rock.new,
+      'paper' => Paper.new,
+      'scissors' => Scissors.new,
+      'lizard' => Lizard.new,
+      'spock' => Spock.new
+    }
+  }.freeze
 
   def moves
     POSSIBLE_MOVES[$game_version]
@@ -45,7 +45,7 @@ class Computer < Players
     move_name = nil
     i = 0
 
-    while move_name != preferred_choice && i < tries do
+    while move_name != preferred_choice && i < tries
       move_name = moves.keys.sample
       i += 1
     end

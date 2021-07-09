@@ -31,8 +31,8 @@ class Game
     player_name = player_hist.first.first
 
     base_stats = moves.each_with_object({}) do |(move, _), obj|
-                   obj[move] = 0
-                 end
+      obj[move] = 0
+    end
 
     base_stats['total'] = 0
 
@@ -41,10 +41,10 @@ class Game
     computer_stats   = tally_player_stats(computer_hist, base_stats)
 
     @stats = {
-               'game_percentages' => game_percentages,
-               'player_stats'     => player_stats,
-               'computer_stats'   => computer_stats
-             }
+      'game_percentages' => game_percentages,
+      'player_stats' => player_stats,
+      'computer_stats' => computer_stats
+    }
   end
 
   private
@@ -66,7 +66,7 @@ class Game
 
   def tally_player_stats(hist, base_stats)
     hist.each_with_object({}) do |(player, move), obj|
-      obj[player]          =  base_stats.clone unless obj.has_key? player
+      obj[player] = base_stats.clone unless obj.key? player
       obj[player][move]    += 1
       obj[player]['total'] += 1
     end

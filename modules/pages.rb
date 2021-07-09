@@ -13,7 +13,8 @@ module Page
 
     private
 
-    attr_accessor :header, :request, :options_header, :options, :prompt_text, :possible_choices
+    attr_accessor :header, :request, :options_header, :options, :prompt_text,
+                  :possible_choices
 
     def game_name
       $game_version == 'rps' ? 'Rock Paper Scissors' : 'Lizard Spock'
@@ -31,12 +32,16 @@ module Page
         print subtext[i]
         break if i == subtext.size - 1
 
-        text_to_slow.split('') { |char| sleep(time); print char }
+        text_to_slow.split('') do |char|
+          sleep(time)
+          print char
+        end
+
         i += 1
       end
     end
 
-    def new_page(required_info = nil, games_count = nil)
+    def new_page(_required_info = nil, _games_count = nil)
       system('clear')              # New Page
       puts "{ #{game_name} }"      # Title
       print "\n\n## #{header}\n"   # Header
@@ -89,9 +94,9 @@ module Page
       self.options_header = "Versions"
 
       self.options = [
-                       ['rps', 'Rock Paper Scissors'],
-                       ['ls',  'Lizard Spock']
-                     ]
+        ['rps', 'Rock Paper Scissors'],
+        ['ls',  'Lizard Spock']
+      ]
 
       self.prompt_text = "Enter version to play"
       self.possible_choices = ['rps', 'ls']
@@ -104,7 +109,7 @@ module Page
       dashes = '-' * player_name.length
 
       print "\nHello #{player_name}!"
-      timed_print( "\n      #{dashes}\n", "#{dashes}", 0.1)
+      timed_print("\n      #{dashes}\n", dashes.to_s, 0.1)
 
       sleep(1)
     end
@@ -132,15 +137,16 @@ module Page
 
       if games_count == 0
         timed_print("\nYou chose to play --> #{game_name}", " --> ", 0.33)
-        timed_print("\n                      #{dashes}\n", "#{dashes}", 0.05)
+        timed_print("\n                      #{dashes}\n", dashes.to_s, 0.05)
 
         sleep(1)
       end
 
       dashes = '-' * computer_name.length
 
-      timed_print("\nYou are playing against --> #{computer_name}", " --> ", 0.33)
-      timed_print("\n                            #{dashes}\n", "#{dashes}", 0.1)
+      timed_print("\nYou are playing against --> #{computer_name}", " --> ",
+                  0.33)
+      timed_print("\n                            #{dashes}\n", dashes.to_s, 0.1)
 
       sleep(1)
     end
@@ -195,7 +201,7 @@ module Page
       timed_print("\nThe winner is --> { #{winner}! }", ' --> ', 0.33)
 
       dashes = '-' * winner.length
-      timed_print("\n                    #{dashes}\n", "#{dashes}", 0.1)
+      timed_print("\n                    #{dashes}\n", dashes.to_s, 0.1)
     end
   end
 
@@ -205,18 +211,18 @@ module Page
       self.options_header = "Input Options"
 
       self.options = [
-                       ['yes', 'Play another round'],
-                       ['no',  'Exit game'],
-                       ['hist', 'View game history'],
-                       ['stats',  'See game stats']
-                     ]
+        ['yes', 'Play another round'],
+        ['no',  'Exit game'],
+        ['hist', 'View game history'],
+        ['stats', 'See game stats']
+      ]
 
       self.prompt_text = "Input"
 
       print_score(game)
     end
 
-    def new_page(required_info = nil, games_count = nil, game, new_header)
+    def new_page(game, new_header, required_info = nil, games_count = nil)
       self.header = new_header
       super(required_info, games_count)
 
@@ -239,15 +245,14 @@ module Page
       match_history = ['hist', 'HIST', 'H', 'h', 'his', 'HIS']
       match_stats = ['stats', 'STATS', 'S', 's', 'stat', 'STAT']
 
-
       loop do
         prompt_user
         user_input = gets.chomp
 
         if match_history.include? user_input
-          new_page('', '', game, 'History')
+          new_page(game, 'History')
         elsif match_stats.include? user_input
-          new_page('', '', game, 'Statistics')
+          new_page(game, 'Statistics')
         elsif (match_continue + match_exit).include? user_input
           break
         else
@@ -256,7 +261,7 @@ module Page
         end
       end
 
-      return match_continue.include?(user_input) ? true : false
+      match_continue.include?(user_input) ? true : false
     end
 
     private
@@ -296,14 +301,14 @@ module Page
     end
 
     def print_each_players_stats(stats)
-        total = stats['total']
+      total = stats['total']
 
-        stats.each do |move, value|
-          next if move == 'total'
-          print "\n#{(move + ':').ljust(10)}#{(100 * value) / total}%"
-        end
+      stats.each do |move, value|
+        next if move == 'total'
+        print "\n#{("#{move}:").ljust(10)}#{(100 * value) / total}%"
+      end
 
-        print "\n\ntotal played: #{total}\n"
+      print "\n\ntotal played: #{total}\n"
     end
 
     def print_player_stats(title, player)
@@ -319,7 +324,7 @@ module Page
       game_percentages, player_stats, computer_stats = stats.values
 
       game_percentages.each do |stat, value|
-        print "\n#{(stat + ':').ljust(6)}#{value}%"
+        print "\n#{("#{stat}:").ljust(6)}#{value}%"
       end
 
       print_player_stats('Player', player_stats)
