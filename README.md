@@ -16,11 +16,11 @@ $ cd rps-game/
 
 ## Running
 
-You must be `cd`'d into the `rps-game` folder and execute the 'play.sh' file to play:
+You must be `cd`'d into the `rps-game` folder and execute the `play.sh` file to play:
 
 ```
 $ cd /path/to/rps-game/
 $ ./play.sh
 ```
 
-Note that you can exit the game at any time by pressing `Ctrl-c`. Otherwise, you may enter `n` at the end of each round to exit, or enter `y` to play another round. You can also view the game history and statistics by entering 'hist' or 'stat'.
+Note that you can exit the game at any time by pressing `Ctrl-c`. Otherwise, you may enter `n` at the end of each round to exit, or enter `y` to play another round. You can also view the game history and statistics by entering `hist` or `stat`.
