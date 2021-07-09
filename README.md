@@ -5,6 +5,14 @@
 ## About
 `rps-game` is a simple terminal Rock Paper Scissors game, where the player competes against a computer that chooses different 'personalities' each round. You may choose to play as many rounds as you like.
 
+Game version include vanilla Rock Paper Scissors and the more complicated Lizard Spock([see game rules here](https://bigbangtheory.fandom.com/wiki/Rock,_Paper,_Scissors,_Lizard,_Spock)).
+
+## Dependencies
+
+`rps-game` requires the following:
+
+- `Ruby (>= 2.7.0)` (The programming language `rps-game` is written in. See [the official Ruby installation procedures](https://www.ruby-lang.org/en/documentation/installation/).)
+
 ## Installation
 
 To install `rps-game`, simply clone this repository to your machine and navigate to the `rps-game` folder created:
