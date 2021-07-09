@@ -10,19 +10,33 @@ module Page
       print "\nI couldn't understand your input. Please try again...\n\n"
       interface_with_user
     end
+
     private
 
     attr_accessor :header, :request, :options_header, :options, :prompt_text, :possible_choices
 
     def game_name
-      $game_type == 'rps' ? 'Rock Paper Scissors' : 'Lizard Spock'
+      $game_version == 'rps' ? 'Rock Paper Scissors' : 'Lizard Spock'
     end
 
     def moves
-      Players::POSSIBLE_MOVES[$game_type]
+      Players::POSSIBLE_MOVES[$game_version]
     end
 
-    def new_page(required_info = nil)
+    def timed_print(text, text_to_slow, time)
+      subtext = text.split(text_to_slow)
+      i = 0
+
+      loop do
+        print subtext[i]
+        break if i == subtext.size - 1
+
+        text_to_slow.split('') { |char| sleep(time); print char }
+        i += 1
+      end
+    end
+
+    def new_page(required_info = nil, games_count = nil)
       system('clear')              # New Page
       puts "{ #{game_name} }"      # Title
       print "\n\n## #{header}\n"   # Header
@@ -70,16 +84,16 @@ module Page
 
   class GameType < Pages
     def initialize(player_name)
-      self.header = "Game Types"
+      self.header = "Game Version"
       self.request = "Select which version of #{game_name} to play..."
-      self.options_header = "Types"
+      self.options_header = "Versions"
 
       self.options = [
                        ['rps', 'Rock Paper Scissors'],
                        ['ls',  'Lizard Spock']
                      ]
 
-      self.prompt_text = "Enter type to play"
+      self.prompt_text = "Enter version to play"
       self.possible_choices = ['rps', 'ls']
 
       new_page(player_name)
@@ -87,34 +101,48 @@ module Page
 
     def new_page(player_name)
       super
+      dashes = '-' * player_name.length
+
       print "\nHello #{player_name}!"
-      print "\n      #{'-' * player_name.length}\n"
+      timed_print( "\n      #{dashes}\n", "#{dashes}", 0.1)
+
+      sleep(1)
     end
   end
 
   class ChooseMove < Pages
-    def initialize(computer_name)
+    def initialize(computer_name, games_count)
       self.header = "Choose Move"
-      self.request = "Make your move from the list below..."
+      self.request = "Choose your move from the list below..."
 
       self.options_header = "Moves"
       self.options = moves.keys
 
-      self.prompt_text = "Enter type to play"
+      self.prompt_text = "Enter move to play"
       self.possible_choices = options
 
-      new_page(computer_name)
+      new_page(computer_name, games_count)
     end
 
     private
 
-    def new_page(computer_name)
+    def new_page(computer_name, games_count)
       super
-      print "\nYou chose to play --> #{game_name}."
-      print "\n                      #{'-' * game_name.length}\n"
+      dashes = '-' * game_name.length
 
-      print "\nYou are playing against: #{computer_name}"
-      print "\n                       #{'-' * computer_name.length}\n"
+      if games_count == 0
+        timed_print("\nYou chose to play --> #{game_name}", " --> ", 0.33)
+        timed_print("\n                      #{dashes}\n", "#{dashes}", 0.05)
+
+        sleep(1)
+      end
+
+      dashes = '-' * computer_name.length
+
+      timed_print("\nYou are playing against --> #{computer_name}", " --> ", 0.33)
+      timed_print("\n                            #{dashes}\n", "#{dashes}", 0.1)
+
+      sleep(1)
     end
 
     def print_options
@@ -135,7 +163,7 @@ module Page
       self.options_header = "Moves"
       self.options = moves.keys
 
-      self.prompt_text = "Enter type to play"
+      self.prompt_text = "Enter version to play"
       self.possible_choices = options
 
       new_page(game_history)
@@ -143,27 +171,152 @@ module Page
 
     private
 
-    def dramatic_print(text, text_to_slow, time)
-      subtext = text.split(text_to_slow)
-      i = 0
-
-      loop do
-        print subtext[i]
-        break if i == subtext.size - 1
-
-        text_to_slow.split('') { |char| sleep(time); print char }
-        i += 1
-      end
-    end
-
     def new_page(game_history)
       super
-      winners, player_info, computer_info = game_history
+      winners, player_info, computer_info = game_history.values
 
-      dramatic_print("\nShow in 1...2...3...SHOW!\n", "...", 0.33)
+      winner = winners.last
+      player_name, player_move = player_info.last
+      computer_name, computer_move = computer_info.last
+
+      sleep(0.5)
+      print "\n#{player_name} and #{computer_name} have chosen their moves.\n"
+      sleep(2)
+
+      timed_print("\nShow in 1...2...3...SHOW!\n", "...", 0.33)
+
+      print "\n   | #{player_name} chose --> #{player_move}"
+      print "\n     #{' ' * player_name.length}           #{'-' * player_move.length}\n"
+
+      print "\n   | #{computer_name} chose --> #{computer_move}"
+      print "\n     #{' ' * computer_name.length}           #{'-' * computer_move.length}\n"
+
+      sleep(2)
+      timed_print("\nThe winner is --> { #{winner}! }", ' --> ', 0.33)
+
+      dashes = '-' * winner.length
+      timed_print("\n                    #{dashes}\n", "#{dashes}", 0.1)
     end
   end
 
-  class InfoAndContinue
+  class ContinueAndStats < Pages
+    def initialize(game)
+      self.request = "\nReplay or see game history and statistics..."
+      self.options_header = "Input Options"
+
+      self.options = [
+                       ['yes', 'Play another round'],
+                       ['no',  'Exit game'],
+                       ['hist', 'View game history'],
+                       ['stats',  'See game stats']
+                     ]
+
+      self.prompt_text = "Input"
+
+      print_score(game.score)
+    end
+
+    def new_page(required_info = nil, games_count = nil, game, new_header)
+      self.header = new_header
+      super(required_info, games_count)
+
+      if new_header == 'History'
+        print_history(game.history)
+      else
+        print_stats(game.stats)
+      end
+
+      sleep(1)
+      print_options
+    end
+
+    def interface_with_user(game)
+      print_options
+      user_input = nil
+
+      match_continue = ['yes', 'YES', 'Y', 'y']
+      match_exit = ['no', 'NO', 'N', 'n']
+      match_history = ['hist', 'HIST', 'H', 'h', 'his', 'HIS']
+      match_stats = ['stats', 'STATS', 'S', 's', 'stat', 'STAT']
+
+
+      loop do
+        prompt_user
+        user_input = gets.chomp
+
+        if match_history.include? user_input
+          new_page('', '', game, 'History')
+        elsif match_stats.include? user_input
+          new_page('', '', game, 'Statistics')
+        elsif (match_continue + match_exit).include? user_input
+          break
+        else
+          print "\nI couldn't understand your input. Please try again...\n\n"
+          next
+        end
+      end
+
+      return match_continue.include?(user_input) ? true : false
+    end
+
+    private
+
+    def print_score(score)
+      wins, loses, ties = score.values
+
+      print "\n\n  |Score|"
+
+      print "\n    wins:  #{wins}"
+      print "\n    loses: #{loses}"
+      print "\n    ties:  #{ties}\n"
+
+      sleep(1)
+    end
+
+    def cell(text)
+      text.ljust(20)
+    end
+
+    def print_history(history)
+      winners, player_info, computer_info = history.values
+
+      asize = winners.size
+      print "\n#{cell('Name')}#{cell('Move')}#{cell('Winner')}"
+      print "\n#{cell('----')}#{cell('----')}#{cell('------')}\n\n"
+
+      asize.times do |i|
+        print "#{cell(player_info[i][0])}#{cell(player_info[i][1])}#{cell(winners[i])}\n"
+        print "#{cell(computer_info[i][0])}#{cell(computer_info[i][1])}#{cell('-' * winners[i].length)}\n\n"
+      end
+    end
+
+    def print_each_players_stats(stats)
+        total = stats['total']
+
+        stats.each do |move, value|
+          next if move == 'total'
+          print "\n#{(move + ':').ljust(10)}#{(100 * value) / total}%"
+        end
+    end
+
+    def print_player_stats(title, player)
+      print "\n\n\n[ #{title} ] #{'=' * 15}"
+
+      player.each do |name, stats|
+        print "\n\n## #{name}"
+        print_each_players_stats(stats)
+      end
+    end
+
+    def print_stats(stats)
+      game_percentages, player_stats, computer_stats = stats.values
+
+      game_percentages.each do |stat, value|
+        print "\n#{(stat + ':').ljust(6)}#{value}%"
+      end
+
+      print_player_stats('Player', player_stats)
+      print_player_stats('Computer', computer_stats)
+    end
   end
 end

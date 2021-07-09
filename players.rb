@@ -18,7 +18,7 @@ class Players
                     }.freeze
 
   def moves
-    POSSIBLE_MOVES[$game_type]
+    POSSIBLE_MOVES[$game_version]
   end
 
   def to_s
@@ -66,7 +66,7 @@ class R2D2 < Computer
   def initialize() @name = 'R2D2'; end
 
   def personality
-    if $game_type == 'rps'
+    if $game_version == 'rps'
       preference('rock', 3)
     else
       preference(['rock', 'lizard', 'lizard'].sample, 2)
@@ -78,7 +78,7 @@ class C3PO < Computer
   def initialize() @name = 'C3PO'; end
 
   def personality
-    if $game_type == 'rps'
+    if $game_version == 'rps'
       preference('paper', 2)
     else
       preference('spock', 3)
@@ -90,7 +90,7 @@ class BB8 < Computer
   def initialize() @name = 'BB8'; end
 
   def personality
-    if $game_type == 'rps'
+    if $game_version == 'rps'
       preference(['rock', 'paper'].sample, 2)
     else
       preference(['rock', 'paper', 'lizard'].sample, 2)
@@ -102,7 +102,7 @@ class Walle < Computer
   def initialize() @name = 'Walle'; end
 
   def personality
-    if $game_type == 'rps'
+    if $game_version == 'rps'
       'scissors'
     else
       ['scissors', 'spock'].sample
@@ -114,7 +114,7 @@ class Sonny < Computer
   def initialize() @name = 'Sonny'; end
 
   def personality
-    if $game_type == 'rps'
+    if $game_version == 'rps'
       'paper'
     else
       ['paper', 'spock', 'spock'].sample
@@ -126,7 +126,7 @@ class Hal < Computer
   def initialize() @name = 'Hal'; end
 
   def personality
-    if $game_type == 'rps'
+    if $game_version == 'rps'
       preference('rock', 3)
     else
       'spock'

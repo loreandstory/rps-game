@@ -1,9 +1,10 @@
 class Game
-  attr_reader :score, :history, :stats
+  attr_reader :score, :history, :stats, :count
 
   def initialize
     @score   = { wins: 0,     loses: 0,   ties: 0 }
     @history = { winners: [], player: [], computer: [] }
+    @count = 0
   end
 
   def update(player, computer)
@@ -21,6 +22,8 @@ class Game
     history[:winners]  << winner
     history[:player]   << [player.name, player.move.to_s]
     history[:computer] << [computer.name, computer.move.to_s]
+
+    @count += 1
   end
 
   def update_stats
@@ -47,7 +50,7 @@ class Game
   private
 
   def moves
-    Players::POSSIBLE_MOVES[$game_type]
+    Players::POSSIBLE_MOVES[$game_version]
   end
 
   def calc_game_percentages(winners, player_name)
@@ -58,7 +61,7 @@ class Game
     tie_percent  = (100 * ties.size) / winners.size
     lose_percent = 100 - win_percent - tie_percent
 
-    { 'wins' => win_percent, 'loses' => lose_percent, 'ties' => tie_percent }
+    { 'won' => win_percent, 'lost' => lose_percent, 'tied' => tie_percent }
   end
 
   def tally_player_stats(hist, base_stats)
