@@ -213,7 +213,7 @@ module Page
 
       self.prompt_text = "Input"
 
-      print_score(game.score)
+      print_score(game)
     end
 
     def new_page(required_info = nil, games_count = nil, game, new_header)
@@ -261,10 +261,13 @@ module Page
 
     private
 
-    def print_score(score)
-      wins, loses, ties = score.values
+    def print_score(game)
+      wins, loses, ties = game.score.values
 
-      print "\n\n  |Score|"
+      player_history = game.history[:player]
+      player_name = player_history.last.first
+
+      print "\n\n  |#{player_name}'s Score|"
 
       print "\n    wins:  #{wins}"
       print "\n    loses: #{loses}"
@@ -288,6 +291,8 @@ module Page
         print "#{cell(player_info[i][0])}#{cell(player_info[i][1])}#{cell(winners[i])}\n"
         print "#{cell(computer_info[i][0])}#{cell(computer_info[i][1])}#{cell('-' * winners[i].length)}\n\n"
       end
+
+      print "\n#{'-' * 60}"
     end
 
     def print_each_players_stats(stats)
@@ -297,6 +302,8 @@ module Page
           next if move == 'total'
           print "\n#{(move + ':').ljust(10)}#{(100 * value) / total}%"
         end
+
+        print "\n\ntotal played: #{total}\n"
     end
 
     def print_player_stats(title, player)
@@ -317,6 +324,8 @@ module Page
 
       print_player_stats('Player', player_stats)
       print_player_stats('Computer', computer_stats)
+
+      print "\n\n#{'-' * 60}"
     end
   end
 end

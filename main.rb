@@ -1,4 +1,4 @@
-$LOAD_PATH << "."
+$LOAD_PATH << "modules/"
 
 require 'moves'
 require 'players'
